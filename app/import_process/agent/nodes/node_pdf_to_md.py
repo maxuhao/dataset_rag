@@ -163,7 +163,8 @@ def step_3_download_and_extract(zip_url, local_dir_obj, stem):
         # 通过递归进行删除 本身也会被删除
         shutil.rmtree(extract_target_dir)
     # 创建一个新的目录
-    extract_target_dir.mkdir(parents=True, exist_ok=True) # parents=True 创建父目录 exist_ok=True 存在则不创建
+    # parents=True 创建父目录 exist_ok=True 存在则不创建
+    extract_target_dir.mkdir(parents=True, exist_ok=True)
 
     # 4. 解压zip文件
     # python zip解压模块 zipfile进行zip压缩和解压
