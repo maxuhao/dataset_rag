@@ -62,3 +62,4 @@ Thumbs.db
 # Project specific
 docker/
 doc/
+/output/
