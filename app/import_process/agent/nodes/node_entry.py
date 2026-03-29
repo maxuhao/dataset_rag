@@ -50,10 +50,16 @@ def node_entry(state: ImportGraphState) -> ImportGraphState:
     #                               aaaa.pdf
     # os.path
     # aa.bb.tar.gz
-    file_title_os = os.path.basename(local_file_path).split(".")[0]
-    file_title = Path(local_file_path).stem # 去掉后缀的文件名  .name  .suffix
+    # file_title_os = os.path.basename(local_file_path).split(".")[0]
+    file_title = Path(local_file_path).stem # D:/develop/ai_project/deep_search_pro/项目步骤.md -> 项目步骤
     state['file_title'] = file_title
     # 4. 结束节点的日志输出 【节点 + 核心参数】 记录任务状态（给前端推送信息）
     logger.info(f">>> [{function_name}]开始结束了！现在的状态为：{state}")
-    add_done_task(state['task_id'], function_name)
+    add_done_task(state['task_id'], function_name) # 给前端推送信息
     return state
+
+if __name__ == '__main__':
+    path = Path('D:/develop/ai_project/deep_search_pro/项目步骤.md')
+    print(path)
+    print(path.exists())
+    print(path.stem)

@@ -79,7 +79,7 @@ def step_2_upload_and_poll(pdf_path_obj) -> str:
     http_session = requests.Session()
     http_session.trust_env = False # 禁用代理 复用请求对象
     try:
-        with open(pdf_path_obj, 'rb') as f:
+        with open(pdf_path_obj, 'rb') as f: # rb 二进制读取
             file_data = f.read()
         upload_response = http_session.put(uploaded_url, data=file_data)
         if upload_response.status_code != 200:
@@ -113,7 +113,7 @@ def step_2_upload_and_poll(pdf_path_obj) -> str:
             if 500 <= res.status_code < 600:
                 # 5xx系列我们会给与机会，直到timeout
                 time.sleep(poll_interval)
-                continue
+                continue # continue 跳过本次循环，进入下一次循环
             raise RuntimeError(f"[step_2_upload_and_poll]请求minerU解析接口失败，返回的状态码{res.status_code}！！")
 
         json_data = res.json()
@@ -151,7 +151,7 @@ def step_3_download_and_extract(zip_url, local_dir_obj, stem):
     # 2. 将响应体的zip文件保存到本地
     # 保存文件 output/二狗子/ 二狗子_result.zip
     zip_save_path = local_dir_obj / f"{stem}_result.zip"
-    with open(zip_save_path, 'wb') as f:
+    with open(zip_save_path, 'wb') as f: # wb 二进制写入
         f.write(response.content)
     logger.info(f"[step_3_download_and_extract]下载文件成功，保存路径：{zip_save_path}")
 
@@ -175,7 +175,7 @@ def step_3_download_and_extract(zip_url, local_dir_obj, stem):
         zip_file_object.extractall(extract_target_dir)
     # 5 返回md文件的地址
     # 解压后得到的文件明 可能叫 文化.md or full.md
-    md_file_list = list(extract_target_dir.rglob("*.md"))
+    md_file_list = list(extract_target_dir.rglob("*.md")) # rglob("*.md") 递归搜索
 
     if not md_file_list:
         logger.error(f"[step_3_download_and_extract]没有找到md文件，请检查输入文件路径是否正确！！")
@@ -207,7 +207,7 @@ def step_3_download_and_extract(zip_url, local_dir_obj, stem):
         # target_md_file.with_name(f"{stem}.md") 修改path对象 （不涉及文件操作） 返回结果是修改后path对象
         # target_md_file.rename(target_md_file.with_name(f"{stem}.md")) 修改磁盘中的文件名称（修改名称了） return 新的路径path
         # rename是磁盘操作，会返回新的路径path with_name是修改文件名
-        target_md_file = target_md_file.rename(target_md_file.with_name(f"{stem}.md"))
+        target_md_file = target_md_file.rename(target_md_file.with_name(f"{stem}.md")) # 修改磁盘中的文件名称（修改名称了） return 新的路径path
 
     # 最终的md文件获取绝对路径，并返回字符串类型
     final_md_str_path = str(target_md_file.resolve())
