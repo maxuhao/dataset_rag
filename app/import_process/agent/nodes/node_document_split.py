@@ -11,9 +11,9 @@ from app.utils.task_utils import add_running_task, add_done_task
 
 # --- 配置参数 (Configuration) ---
 # 单个Chunk最大字符长度：超过则触发二次切分（适配大模型上下文窗口）
-DEFAULT_MAX_CONTENT_LENGTH = 2000 # 512 - 1500 token
+DEFAULT_MAX_CONTENT_LENGTH = 600 # 512 - 1500 token
 # 短Chunk合并阈值：同父标题的短Chunk会被合并，减少碎片化
-MIN_CONTENT_LENGTH = 500 # 最小的长度
+MIN_CONTENT_LENGTH = 300 # 最小的长度
 """
    完成md内容的切块！ 
    最终： chunks -> 存储块的集合   chunks ->  备份到本地 -> chunks.json 
@@ -314,7 +314,7 @@ if __name__ == '__main__':
     logger.info(f"本地测试 - 项目根目录：{PROJECT_ROOT}")
 
     # 测试MD文件路径（需手动将测试文件放入对应目录）
-    test_md_name = os.path.join(r"output\hak180产品安全手册", "hak180产品安全手册.md")
+    test_md_name = os.path.join(r"output\hak180产品安全手册", "hak180产品安全手册_new.md")
     test_md_path = os.path.join(PROJECT_ROOT, test_md_name)
 
     # 校验测试文件是否存在
@@ -323,20 +323,32 @@ if __name__ == '__main__':
         logger.info("请检查文件路径，或手动将测试MD文件放入项目根目录的output目录下")
     else:
         # 构造测试状态对象，模拟流程入参
+        # test_state = {
+        #     "md_path": test_md_path,
+        #     "task_id": "test_task_123456",
+        #     "md_content": "",
+        #     "file_title": "hak180产品安全手册",
+        #     "local_dir":os.path.join(PROJECT_ROOT, "output"),
+        # }
+        # logger.info("开始本地测试 - MD图片处理全流程")
+        # # 执行核心处理流程
+        # result_state = node_md_img(test_state)
+        # logger.info(f"本地测试完成 - 处理结果状态：{result_state}")
+        # logger.info("\n=== 开始执行文档切分节点集成测试 ===")
+
+
+        with open(test_md_path, "r", encoding="utf-8") as f:
+            test_md_content = f.read()
+
         test_state = {
             "md_path": test_md_path,
             "task_id": "test_task_123456",
-            "md_content": "",
+            "md_content": test_md_content,
             "file_title": "hak180产品安全手册",
             "local_dir":os.path.join(PROJECT_ROOT, "output"),
         }
-        logger.info("开始本地测试 - MD图片处理全流程")
-        # 执行核心处理流程
-        result_state = node_md_img(test_state)
-        logger.info(f"本地测试完成 - 处理结果状态：{result_state}")
-        logger.info("\n=== 开始执行文档切分节点集成测试 ===")
 
         logger.info(">> 开始运行当前节点：node_document_split（文档切分）")
-        final_state = node_document_split(result_state)
+        final_state = node_document_split(test_state)
         final_chunks = final_state.get("chunks", [])
         logger.info(f"✅ 测试成功：最终生成{len(final_chunks)}个有效Chunk{final_chunks}")
