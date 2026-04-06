@@ -65,8 +65,8 @@ def run_import_graph(task_id: str, local_file_path: str, local_dir: str):
     # _tasks_done_list: Dict[str, List[str]] = {}
     # key=task_id 本次上传文件任务的唯一标识
     # value = list [文件上传，检查文件 节点名字] （正在进行 | 已经完成）
-    add_done_task(task_id, "upload_file")
-    add_running_task(task_id, "upload_file")
+    # add_done_task(task_id, "upload_file")
+    # add_running_task(task_id, "upload_file")
     try:
         # 本次任务的总状态
         # _tasks_status: Dict[str, str] = {}
