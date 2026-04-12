@@ -188,6 +188,11 @@ def get_recent_messages(session_id: str, limit: int = 10) -> List[Dict[str, Any]
         # 将游标转为列表，触发实际数据库查询，获取所有符合条件的文档
         messages = list(cursor)
 
+        # 将 ObjectId 转换为字符串，避免 FastAPI 序列化失败
+        for msg in messages:
+            if "_id" in msg and isinstance(msg["_id"], ObjectId):
+                msg["_id"] = str(msg["_id"])
+
         # 返回查询结果列表
         return messages
     except Exception as e:
