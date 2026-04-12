@@ -148,7 +148,7 @@ def step_5_confirmed_and_optional_item_name(query_milvus_results):
         matches.sort(key=lambda x: x.get("score", 0), reverse=True)
         # >= 0.8 [{item_name: , score:},{}]
         # 处理 -》 先处理高分 -》 有 -》 正常执行 || 如果没有 -》 才处理低分
-        high_score_matches = [x for x in matches if x.get("score", 0) >= 0.85]
+        high_score_matches = [x for x in matches if x.get("score", 0) >= 0.78]
         middle_score_matches = [x for x in matches if x.get("score", 0) >= 0.6]
         # 4. 处理高分的列表 只有一个1  获取一个1  ||  多个【item_name = extracted 】 or 获取最高分的1个
         # 4.1 只有一个，获取一个
@@ -247,11 +247,6 @@ def node_item_name_confirm(state):
 
     #  1、获取历史条件记录（作为依据）
     history_chats = get_recent_messages(state.get("session_id", ""), limit=10)
-    #  2、保存当前次的聊天记录
-    message_id = save_chat_message(session_id=state.get("session_id", ""), role="user",
-                                   text=state.get("original_query", ""),
-                                   rewritten_query=state.get("rewritten_query", ""),
-                                   item_names=state.get("item_names", []), image_urls=state.get("image_urls", []), )
     #  3. 利用模型lm -> 1. 提取item_names  2.重写提问内容
     #  参数： state["original_query"] || history_chats
     #  响应： { item_names : [] , rewritten_query : str }
